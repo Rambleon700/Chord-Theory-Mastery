@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guitar Chord Theory & 24-Fret Chromatic Mastery</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        amber: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            950: '#120805',
+                        },
+                        wood: {
+                            800: '#261811',
+                            900: '#180e0a',
+                            950: '#0d0704',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0604;
+            color: #e5e7eb;
+        }
+        .wood-neck {
+            background: linear-gradient(180deg, #1f130d 0%, #2b1a12 50%, #170d08 100%);
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.8), 0 4px 16px rgba(0,0,0,0.6);
+        }
+        .fret-wire {
+            background: linear-gradient(90deg, #888, #eee, #aaa, #666);
+            box-shadow: 1px 0 2px rgba(0,0,0,0.8);
+        }
+        .nut-bar {
+            background: linear-gradient(90deg, #e3dedb, #fff, #c5beb9);
+            box-shadow: 2px 0 5px rgba(0,0,0,0.9);
+        }
+        .card-bg {
+            background: rgba(22, 14, 10, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(245, 158, 11, 0.18);
+        }
+        /* Custom scrollbar for 24-fretboard */
+        .fretboard-scroll::-webkit-scrollbar {
+            height: 10px;
+        }
+        .fretboard-scroll::-webkit-scrollbar-track {
+            background: #0d0704;
+            border-radius: 5px;
+        }
+        .fretboard-scroll::-webkit-scrollbar-thumb {
+            background: #d97706;
+            border-radius: 5px;
+        }
+        .fretboard-scroll::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b;
+        }
+        .note-marker {
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .note-marker:hover {
+            transform: scale(1.25);
+            z-index: 40;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans antialiased text-gray-200 selection:bg-amber-500 selection:text-black">
+
+    <!-- HEADER -->
+    <header class="border-b border-amber-900/40 bg-wood-950/95 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 to-amber-400 flex items-center justify-center text-wood-950 shadow-lg shadow-amber-500/20 font-bold">
+                    <i data-lucide="guitar" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight bg-gradient-to-r from-amber-200 via-amber-400 to-amber-100 bg-clip-text text-transparent">FretboardTheory 24</h1>
+                    <p class="text-xs text-amber-500/80 font-medium">Interactive 24-Fret Chromatic & Chord Mastery Engine</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <button id="audio-toggle-btn" class="flex items-center space-x-2 bg-amber-900/30 hover:bg-amber-900/50 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-lg text-sm transition font-medium">
+                    <i id="audio-icon" data-lucide="volume-2" class="w-4 h-4 text-amber-400"></i>
+                    <span id="audio-status-text">Audio Enabled</span>
+                </button>
+                <button onclick="openTutorialModal()" class="flex items-center space-x-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-wood-950 px-3 py-1.5 rounded-lg text-sm font-bold shadow-md shadow-amber-500/20 transition">
+                    <i data-lucide="help-circle" class="w-4 h-4"></i>
+                    <span>App Guide & Workflows</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- TOP ANNOUNCEMENT BANNER FOR TUTORIAL -->
+    <div class="bg-gradient-to-r from-amber-950 via-wood-900 to-amber-950 border-b border-amber-800/40 py-2.5 px-4">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+            <div class="flex items-center space-x-2 text-amber-200">
+                <span class="bg-amber-500 text-wood-950 font-bold px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">New</span>
+                <span>Want to master chord theory fast? Check out the step-by-step workflows & interactive scenarios!</span>
+            </div>
+            <button onclick="openTutorialModal()" class="text-amber-400 hover:text-amber-300 underline font-semibold flex items-center space-x-1 shrink-0">
+                <span>Launch Interactive Tour & Examples</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full flex flex-col gap-6">
+
+        <!-- NAV TABS -->
+        <nav class="flex space-x-1 overflow-x-auto pb-2 border-b border-amber-900/30 text-sm font-medium scrollbar-none">
+            <button onclick="switchTab('formulas')" id="tab-btn-formulas" class="tab-btn active text-amber-400 border-b-2 border-amber-400 px-4 py-2 flex items-center space-x-2 whitespace-nowrap">
+                <i data-lucide="layers" class="w-4 h-4"></i>
+                <span>1. 24-Fret Chromatic & Formulas</span>
+            </button>
+            <button onclick="switchTab('decoder')" id="tab-btn-decoder" class="tab-btn text-gray-400 hover:text-amber-200 px-4 py-2 flex items-center space-x-2 whitespace-nowrap">
+                <i data-lucide="binary" class="w-4 h-4"></i>
+                <span>2. Symbol Decoder</span>
+            </button>
+            <button onclick="switchTab('mutation')" id="tab-btn-mutation" class="tab-btn text-gray-400 hover:text-amber-200 px-4 py-2 flex items-center space-x-2 whitespace-nowrap">
+                <i data-lucide="git-commit" class="w-4 h-4"></i>
+                <span>3. 1-Note Mutation</span>
+            </button>
+            <button onclick="switchTab('voice-leading')" id="tab-btn-voice-leading" class="tab-btn text-gray-400 hover:text-amber-200 px-4 py-2 flex items-center space-x-2 whitespace-nowrap">
+                <i data-lucide="route" class="w-4 h-4"></i>
+                <span>4. High-Register Voice Leading</span>
+            </button>
+            <button onclick="switchTab('mood-matrix')" id="tab-btn-mood-matrix" class="tab-btn text-gray-400 hover:text-amber-200 px-4 py-2 flex items-center space-x-2 whitespace-nowrap">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                <span>5. Songwriting Palette</span>
+            </button>
+            <button onclick="switchTab('drills')" id="tab-btn-drills" class="tab-btn text-gray-400 hover:text-amber-200 px-4 py-2 flex items-center space-x-2 whitespace-nowrap">
+                <i data-lucide="dumbbell" class="w-4 h-4"></i>
+                <span>6. 24-Fret Quiz Drill</span>
+            </button>
+            <button onclick="openTutorialModal()" class="tab-btn text-amber-300 hover:text-amber-100 px-4 py-2 flex items-center space-x-2 whitespace-nowrap ml-auto bg-amber-900/20 rounded-lg border border-amber-700/30">
+                <i data-lucide="book-open" class="w-4 h-4 text-amber-400"></i>
+                <span>Tutorial & Guides</span>
+            </button>
+        </nav>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-grow">
+
+            <!-- MODULE 1: 24-FRET CHROMATIC & FORMULAS -->
+            <section id="section-formulas" class="tab-content space-y-6">
+                
+                <!-- 24-FRETBOARD ENGINE PANEL -->
+                <div class="card-bg rounded-2xl p-6">
+                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-amber-300">Interactive 24-Fret Chromatic Interval Map</h2>
+                            <p class="text-xs text-gray-300 mt-1">Explore all 24 frets across 6 strings. Filter formulas, solo strings, or switch display modes.</p>
+                        </div>
+                        <!-- Play Strum Button -->
+                        <div class="flex items-center space-x-3">
+                            <button onclick="playFretboardChord()" class="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-wood-950 font-bold px-4 py-2 rounded-xl flex items-center space-x-2 shadow-lg shadow-amber-600/20 text-sm transition">
+                                <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                                <span>Strum Highlighted Notes</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- FRETBOARD CONTROLS BAR -->
+                    <div class="bg-wood-950/80 p-4 rounded-xl border border-amber-900/40 flex flex-wrap gap-4 items-center justify-between mb-6">
+                        <!-- Root Selector -->
+                        <div>
+                            <label class="block text-[10px] text-amber-400 font-bold uppercase tracking-wider mb-1">Root Key</label>
+                            <div class="flex space-x-1" id="fretboard-root-buttons">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Chord / Scale Focus Filter -->
+                        <div>
+                            <label class="block text-[10px] text-amber-400 font-bold uppercase tracking-wider mb-1">Formula Highlight Filter</label>
+                            <select id="fretboard-formula-select" onchange="updateFretboard()" class="bg-wood-900 border border-amber-700/50 text-amber-100 rounded-lg px-3 py-1 text-sm outline-none focus:ring-2 focus:ring-amber-500">
+                                <option value="all">Full Chromatic Scale (All 12 Notes)</option>
+                                <option value="major">Major (1 - 3 - 5)</option>
+                                <option value="minor">Minor (1 - ♭3 - 5)</option>
+                                <option value="dom7">Dominant 7th (1 - 3 - 5 - ♭7)</option>
+                                <option value="maj7">Major 7th (1 - 3 - 5 - 7)</option>
+                                <option value="m7">Minor 7th (1 - ♭3 - 5 - ♭7)</option>
+                                <option value="sus2">Suspended 2 (1 - 2 - 5)</option>
+                                <option value="sus4">Suspended 4 (1 - 4 - 5)</option>
+                                <option value="add9">Add 9 (1 - 3 - 5 - 9)</option>
+                                <option value="pentatonic-maj">Major Pentatonic (1 - 2 - 3 - 5 - 6)</option>
+                                <option value="pentatonic-min">Minor Pentatonic (1 - ♭3 - 4 - 5 - ♭7)</option>
+                            </select>
+                        </div>
+
+                        <!-- Display Mode Toggle -->
+                        <div>
+                            <label class="block text-[10px] text-amber-400 font-bold uppercase tracking-wider mb-1">Marker Display Mode</label>
+                            <div class="flex bg-wood-900 p-0.5 rounded-lg border border-amber-900/40 text-xs font-semibold">
+                                <button onclick="setDisplayMode('notes')" id="disp-mode-notes" class="px-2.5 py-1 rounded-md bg-amber-500 text-wood-950">Note Name</button>
+                                <button onclick="setDisplayMode('intervals')" id="disp-mode-intervals" class="px-2.5 py-1 rounded-md text-gray-400 hover:text-amber-200">Interval</button>
+                                <button onclick="setDisplayMode('semitones')" id="disp-mode-semitones" class="px-2.5 py-1 rounded-md text-gray-400 hover:text-amber-200">Semitones</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STRING SOLO / FILTER STRIP -->
+                    <div class="flex items-center space-x-2 mb-3 text-xs font-semibold text-gray-400">
+                        <span class="text-amber-400 text-[10px] uppercase font-bold tracking-wider mr-2">Solo Strings:</span>
+                        <button onclick="toggleStringSolo('all')" id="str-solo-all" class="px-2 py-0.5 rounded bg-amber-500 text-wood-950 font-bold">ALL</button>
+                        <button onclick="toggleStringSolo(5)" id="str-solo-5" class="px-2 py-0.5 rounded bg-wood-900 text-gray-300 border border-amber-900/40">E (6th)</button>
+                        <button onclick="toggleStringSolo(4)" id="str-solo-4" class="px-2 py-0.5 rounded bg-wood-900 text-gray-300 border border-amber-900/40">A (5th)</button>
+                        <button onclick="toggleStringSolo(3)" id="str-solo-3" class="px-2 py-0.5 rounded bg-wood-900 text-gray-300 border border-amber-900/40">D (4th)</button>
+                        <button onclick="toggleStringSolo(2)" id="str-solo-2" class="px-2 py-0.5 rounded bg-wood-900 text-gray-300 border border-amber-900/40">G (3rd)</button>
+                        <button onclick="toggleStringSolo(1)" id="str-solo-1" class="px-2 py-0.5 rounded bg-wood-900 text-gray-300 border border-amber-900/40">B (2nd)</button>
+                        <button onclick="toggleStringSolo(0)" id="str-solo-0" class="px-2 py-0.5 rounded bg-wood-900 text-gray-300 border border-amber-900/40">e (1st)</button>
+                    </div>
+
+                    <!-- THE 24-FRETBOARD CONTAINER (SCROLLABLE) -->
+                    <div class="overflow-x-auto fretboard-scroll pb-4 border border-amber-900/50 rounded-xl bg-wood-950 p-2">
+                        <div id="fretboard-main" class="min-w-[1500px] wood-neck relative rounded-lg p-4 select-none">
+                            <!-- Populated dynamically by JS -->
+                        </div>
+                    </div>
+
+                    <!-- COLOR-CODED INTERVAL LEGEND -->
+                    <div class="mt-6 bg-wood-950/60 p-4 rounded-xl border border-amber-900/30">
+                        <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-3">Color-Coded Interval Legend</h4>
+                        <div id="interval-legend-container" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2 text-xs">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- HOVER / CLICK NOTE DETAILS CARD -->
+                    <div id="note-detail-box" class="mt-4 p-4 rounded-xl bg-wood-900/90 border border-amber-700/40 flex flex-wrap justify-between items-center text-xs text-amber-200">
+                        <span>💡 Click or hover any fret above to reveal frequency, semitones, and interval distance relative to root.</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODULE 2: WHAT CHORD NAMES MEAN -->
+            <section id="section-decoder" class="tab-content space-y-6 hidden">
+                <div class="card-bg rounded-2xl p-6">
+                    <div class="max-w-3xl">
+                        <h2 class="text-2xl font-bold text-amber-300 mb-2">Decoding Chord Symbols Into Small Finger Decisions</h2>
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            Chord names aren't random codes! They tell you **what base shape to start with** and **what single physical modification to make**.
+                        </p>
+                    </div>
+
+                    <div class="mt-6">
+                        <label class="block text-xs font-semibold text-amber-400 uppercase tracking-wider mb-2">Select or Type Chord Symbol to Decode</label>
+                        <div class="flex flex-wrap gap-2" id="decoder-preset-btns">
+                            <!-- Presets loaded via JS -->
+                        </div>
+                    </div>
+
+                    <div id="decoder-result" class="mt-6 bg-wood-950/90 rounded-xl p-6 border border-amber-800/40 space-y-6">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODULE 3: 1-NOTE SHAPE MUTATION -->
+            <section id="section-mutation" class="tab-content space-y-6 hidden">
+                <div class="card-bg rounded-2xl p-6">
+                    <div class="max-w-3xl">
+                        <h2 class="text-2xl font-bold text-amber-300 mb-2">1-Note Shape Mutation Engine</h2>
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            Stop memorizing hundreds of separate diagrams. Take standard open shapes (C, A, G, E, D) and shift just **one note on purpose** to unlock new sonic colors instantly.
+                        </p>
+                    </div>
+
+                    <div class="mt-6 flex flex-wrap gap-3 items-center">
+                        <span class="text-xs text-amber-400 font-semibold uppercase tracking-wider">Base Shape:</span>
+                        <div id="mutation-base-selector" class="flex flex-wrap gap-2">
+                            <!-- Buttons loaded by JS -->
+                        </div>
+                    </div>
+
+                    <div class="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                        <div class="lg:col-span-7 bg-wood-950 p-6 rounded-2xl border border-amber-900/40 flex flex-col items-center">
+                            <div class="w-full flex justify-between items-center mb-4">
+                                <div>
+                                    <h3 id="mutation-chord-title" class="text-2xl font-bold text-amber-300">C Major</h3>
+                                    <p id="mutation-chord-subtext" class="text-xs text-amber-500/80">Standard Open Position</p>
+                                </div>
+                                <button onclick="playMutationChord()" class="bg-amber-500 hover:bg-amber-400 text-wood-950 px-4 py-2 rounded-xl text-sm font-bold flex items-center space-x-2 transition shadow-lg shadow-amber-500/20">
+                                    <i data-lucide="volume-2" class="w-4 h-4"></i>
+                                    <span>Strum Chord</span>
+                                </button>
+                            </div>
+
+                            <div id="fretboard-canvas-container" class="w-full max-w-md py-2 overflow-x-auto">
+                                <!-- SVG Fretboard -->
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-5 space-y-4">
+                            <h3 class="text-sm font-semibold text-amber-400 uppercase tracking-wider">Available 1-Note Mutations</h3>
+                            <div id="mutation-actions-list" class="space-y-3">
+                                <!-- Generated by JS -->
+                            </div>
+                            
+                            <div id="mutation-explanation-box" class="p-4 rounded-xl bg-amber-950/30 border border-amber-700/30 text-xs text-amber-200/90 leading-relaxed">
+                                Select a mutation above to see how moving one finger changes the chord formula and sound!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODULE 4: HIGH-REGISTER VOICE LEADING -->
+            <section id="section-voice-leading" class="tab-content space-y-6 hidden">
+                <div class="card-bg rounded-2xl p-6">
+                    <div class="max-w-3xl">
+                        <h2 class="text-2xl font-bold text-amber-300 mb-2">Voice Leading & High-Register Shape Comparison</h2>
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            Compare standard lower open position chords against higher-register inversions across **Frets 12-24**. Keep common notes stationary while shifting adjacent notes by minimal frets.
+                        </p>
+                    </div>
+
+                    <div class="mt-6 flex flex-wrap items-center gap-4 bg-wood-950/60 p-4 rounded-xl border border-amber-900/40">
+                        <span class="text-xs text-amber-400 font-semibold uppercase tracking-wider">Progression Preset:</span>
+                        <select id="vl-progression-select" onchange="renderVoiceLeading()" class="bg-wood-900 border border-amber-700/50 text-amber-100 rounded-lg px-3 py-1.5 text-sm outline-none">
+                            <option value="pop-c">C - Am - F - G (High Octave 12-17 Frets)</option>
+                            <option value="rock-d">D - Bm - G - A (Mid-High Register)</option>
+                            <option value="jazz-ii-v-i">Dm7 - G7 - Cmaj7 (High Register Guide Tones)</option>
+                        </select>
+
+                        <button onclick="playVoiceLeadingSequence()" class="ml-auto bg-amber-500 hover:bg-amber-400 text-wood-950 font-bold px-4 py-2 rounded-xl text-sm flex items-center space-x-2 transition">
+                            <i data-lucide="play-circle" class="w-4 h-4"></i>
+                            <span>Play Smooth Sequence</span>
+                        </button>
+                    </div>
+
+                    <div id="vl-display" class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODULE 5: SONGWRITING MOOD MATRIX -->
+            <section id="section-mood-matrix" class="tab-content space-y-6 hidden">
+                <div class="card-bg rounded-2xl p-6">
+                    <div class="max-w-3xl">
+                        <h2 class="text-2xl font-bold text-amber-300 mb-2">Songwriting Palette & Mood Matrix</h2>
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            Reach for sounds based on emotional textures rather than shape memory. Build your custom progression timeline and listen in real time!
+                        </p>
+                    </div>
+
+                    <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="p-4 rounded-xl bg-wood-950/80 border border-amber-500/20 hover:border-amber-500/50 transition">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-bold text-amber-300">Bright & Grounded</span>
+                                <span class="text-xs bg-amber-900/40 text-amber-400 px-2 py-0.5 rounded border border-amber-700/40">Major</span>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3">Happy, resolute, clear, stable foundation.</p>
+                            <button onclick="addChordToProgression('C', 'Major')" class="text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 w-full py-1.5 rounded-lg font-medium">Add C Major</button>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-wood-950/80 border border-teal-500/20 hover:border-teal-500/50 transition">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-bold text-teal-300">Dreamy & Lush</span>
+                                <span class="text-xs bg-teal-900/40 text-teal-400 px-2 py-0.5 rounded border border-teal-700/40">Major 7th</span>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3">Nostalgic, warm, bittersweet, smooth jazz/indie tone.</p>
+                            <button onclick="addChordToProgression('Cmaj7', 'Maj7')" class="text-xs bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 border border-teal-500/30 w-full py-1.5 rounded-lg font-medium">Add Cmaj7</button>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-wood-950/80 border border-blue-500/20 hover:border-blue-500/50 transition">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-bold text-blue-300">Floating & Open</span>
+                                <span class="text-xs bg-blue-900/40 text-blue-400 px-2 py-0.5 rounded border border-blue-700/40">Sus2 / Add9</span>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3">Spacious, ethereal, acoustic resonance without major/minor bias.</p>
+                            <button onclick="addChordToProgression('Csus2', 'Sus2')" class="text-xs bg-blue-500/10 hover:bg-blue-500/20 text-blue-300 border border-blue-500/30 w-full py-1.5 rounded-lg font-medium">Add Csus2</button>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-wood-950/80 border border-purple-500/20 hover:border-purple-500/50 transition">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-bold text-purple-300">Melancholic & Reflective</span>
+                                <span class="text-xs bg-purple-900/40 text-purple-400 px-2 py-0.5 rounded border border-purple-700/40">Minor</span>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3">Sad, introspective, serious emotional depth.</p>
+                            <button onclick="addChordToProgression('Am', 'Minor')" class="text-xs bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/30 w-full py-1.5 rounded-lg font-medium">Add A minor</button>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-wood-950/80 border border-rose-500/20 hover:border-rose-500/50 transition">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-bold text-rose-300">Bluesy Tension</span>
+                                <span class="text-xs bg-rose-900/40 text-rose-400 px-2 py-0.5 rounded border border-rose-700/40">Dominant 7th</span>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3">Gritty, energetic, pulls strongly back to the root.</p>
+                            <button onclick="addChordToProgression('G7', 'Dom7')" class="text-xs bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 w-full py-1.5 rounded-lg font-medium">Add G7</button>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-wood-950/80 border border-amber-500/20 hover:border-amber-500/50 transition">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-bold text-amber-200">Suspended Anticipation</span>
+                                <span class="text-xs bg-amber-900/40 text-amber-300 px-2 py-0.5 rounded border border-amber-700/40">Sus4</span>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3">Tense, yearning to resolve down to the 3rd.</p>
+                            <button onclick="addChordToProgression('Dsus4', 'Sus4')" class="text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-200 border border-amber-500/30 w-full py-1.5 rounded-lg font-medium">Add Dsus4</button>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 bg-wood-950/90 p-6 rounded-2xl border border-amber-900/40">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-bold text-amber-300 flex items-center space-x-2">
+                                <i data-lucide="sliders" class="w-5 h-5"></i>
+                                <span>Your Songwriting Timeline</span>
+                            </h3>
+                            <div class="flex space-x-2">
+                                <button onclick="clearCustomProgression()" class="text-xs text-gray-400 hover:text-rose-400 px-3 py-1 rounded-lg border border-gray-700 hover:border-rose-500/40 transition">Clear All</button>
+                                <button onclick="playCustomProgression()" class="text-xs bg-amber-500 hover:bg-amber-400 text-wood-950 font-bold px-4 py-1.5 rounded-lg flex items-center space-x-1 shadow-md shadow-amber-500/20">
+                                    <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+                                    <span>Play Timeline</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="custom-progression-slots" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 min-h-[90px] p-3 bg-wood-900/60 rounded-xl border border-dashed border-amber-900/50 items-center">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODULE 6: 24-FRET QUIZ DRILL -->
+            <section id="section-drills" class="tab-content space-y-6 hidden">
+                <div class="card-bg rounded-2xl p-6">
+                    <div class="max-w-3xl">
+                        <h2 class="text-2xl font-bold text-amber-300 mb-2">24-Fret Theory & Speed Quiz Drill</h2>
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            Test your fretboard knowledge across all 24 frets, interval formulas, and shape mutations.
+                        </p>
+                    </div>
+
+                    <div class="mt-6 bg-wood-950/90 rounded-2xl p-6 border border-amber-800/40">
+                        <div class="flex justify-between items-center pb-4 border-b border-amber-900/40 mb-6">
+                            <div>
+                                <span class="text-xs font-semibold text-amber-400 uppercase tracking-wider">24-Fret Speed Challenge</span>
+                                <h3 id="quiz-question-title" class="text-xl font-bold text-amber-100 mt-1">Question Loading...</h3>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs text-gray-400 block">Score</span>
+                                <span id="quiz-score" class="text-xl font-mono font-bold text-amber-400">0 / 0</span>
+                            </div>
+                        </div>
+
+                        <div id="quiz-options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                            <!-- Populated dynamically -->
+                        </div>
+
+                        <div id="quiz-feedback" class="hidden p-4 rounded-xl text-sm font-medium transition">
+                            <!-- Feedback text -->
+                        </div>
+
+                        <div class="mt-6 flex justify-end">
+                            <button id="quiz-next-btn" onclick="nextQuizQuestion()" class="hidden bg-amber-500 hover:bg-amber-400 text-wood-950 font-bold px-6 py-2.5 rounded-xl transition flex items-center space-x-2">
+                                <span>Next Challenge</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- APP GUIDE & TUTORIAL MODAL -->
+    <div id="tutorial-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+        <div class="bg-wood-950 border border-amber-600/40 w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+            
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-amber-900/50 bg-wood-900/90 flex justify-between items-center shrink-0">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500 text-wood-950 flex items-center justify-center font-bold">
+                        <i data-lucide="compass" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-amber-300">App Guide & Interactive Workflows</h3>
+                        <p class="text-xs text-gray-400">Master guitar chord theory and unlock the full power of this application</p>
+                    </div>
+                </div>
+                <button onclick="closeTutorialModal()" class="w-8 h-8 rounded-lg bg-wood-950 border border-amber-900/50 text-gray-400 hover:text-amber-300 flex items-center justify-center font-bold transition">✕</button>
+            </div>
+
+            <!-- Modal Nav Tabs -->
+            <div class="flex border-b border-amber-900/30 bg-wood-950 text-xs font-semibold px-6 overflow-x-auto shrink-0">
+                <button onclick="switchGuideTab('workflows')" id="guide-tab-workflows" class="guide-tab active px-4 py-3 text-amber-400 border-b-2 border-amber-400 whitespace-nowrap">⚡ Practical Workflows & Demos</button>
+                <button onclick="switchGuideTab('tools')" id="guide-tab-tools" class="guide-tab px-4 py-3 text-gray-400 hover:text-amber-200 whitespace-nowrap">🛠️ Tool-by-Tool Guide</button>
+                <button onclick="switchGuideTab('theory')" id="guide-tab-theory" class="guide-tab px-4 py-3 text-gray-400 hover:text-amber-200 whitespace-nowrap">💡 Theory Cheat Sheet</button>
+            </div>
+
+            <!-- Modal Content Body -->
+            <div class="p-6 overflow-y-auto space-y-6 flex-grow text-sm text-gray-300">
+
+                <!-- TAB 1: PRACTICAL WORKFLOWS & DEMOS -->
+                <div id="guide-sec-workflows" class="guide-sec space-y-6">
+                    <div class="bg-amber-950/30 border border-amber-700/30 p-4 rounded-xl text-amber-200 text-xs leading-relaxed">
+                        ✨ <strong>Interactive Feature:</strong> Click any "Try This Scenario" button below to instantly configure the application state, load example chords, and hear the audio!
+                    </div>
+
+                    <!-- SCENARIO 1 -->
+                    <div class="p-5 rounded-xl bg-wood-900/80 border border-amber-900/40 space-y-3">
+                        <div class="flex justify-between items-start gap-2">
+                            <div>
+                                <span class="text-[10px] font-mono uppercase bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded font-bold">Scenario 1</span>
+                                <h4 class="text-base font-bold text-amber-200 mt-1">The 'Wonderwall' & Acoustic Embellishment Magic (Sus & Add9)</h4>
+                            </div>
+                            <button onclick="runScenario('wonderwall')" class="shrink-0 bg-amber-500 hover:bg-amber-400 text-wood-950 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center space-x-1.5 transition">
+                                <i data-lucide="play-circle" class="w-4 h-4"></i>
+                                <span>Try This Scenario</span>
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            Instead of strumming a plain D Major chord over and over, acoustic rhythm guitar relies on moving a single finger on the High E string:
+                        </p>
+                        <div class="grid grid-cols-3 gap-2 font-mono text-xs text-center">
+                            <div class="p-2 rounded bg-wood-950 border border-amber-900/40">
+                                <span class="text-amber-400 font-bold block">Dsus2</span>
+                                <span class="text-[10px] text-gray-400">Open High E (2nd)</span>
+                            </div>
+                            <div class="p-2 rounded bg-wood-950 border border-amber-900/40">
+                                <span class="text-amber-400 font-bold block">D Major</span>
+                                <span class="text-[10px] text-gray-400">2nd Fret (3rd)</span>
+                            </div>
+                            <div class="p-2 rounded bg-wood-950 border border-amber-900/40">
+                                <span class="text-amber-400 font-bold block">Dsus4</span>
+                                <span class="text-[10px] text-gray-400">3rd Fret (4th)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SCENARIO 2 -->
+                    <div class="p-5 rounded-xl bg-wood-900/80 border border-amber-900/40 space-y-3">
+                        <div class="flex justify-between items-start gap-2">
+                            <div>
+                                <span class="text-[10px] font-mono uppercase bg-teal-500/20 text-teal-300 px-2 py-0.5 rounded font-bold">Scenario 2</span>
+                                <h4 class="text-base font-bold text-teal-200 mt-1">Eliminating Giant Hand Leaps via Voice Leading</h4>
+                            </div>
+                            <button onclick="runScenario('voice-leading')" class="shrink-0 bg-teal-500 hover:bg-teal-400 text-wood-950 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center space-x-1.5 transition">
+                                <i data-lucide="play-circle" class="w-4 h-4"></i>
+                                <span>Try This Scenario</span>
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            Jumping between low open chords across the neck creates harsh pauses. Smooth <strong>Voice Leading</strong> keeps common notes anchored while shifting adjacent notes by just 1 or 2 frets in high register inversions (Frets 12-17).
+                        </p>
+                    </div>
+
+                    <!-- SCENARIO 3 -->
+                    <div class="p-5 rounded-xl bg-wood-900/80 border border-amber-900/40 space-y-3">
+                        <div class="flex justify-between items-start gap-2">
+                            <div>
+                                <span class="text-[10px] font-mono uppercase bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded font-bold">Scenario 3</span>
+                                <h4 class="text-base font-bold text-purple-200 mt-1">Unlocking the Full 24-Fret Octave Loop</h4>
+                            </div>
+                            <button onclick="runScenario('fret24-loop')" class="shrink-0 bg-purple-500 hover:bg-purple-400 text-wood-950 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center space-x-1.5 transition">
+                                <i data-lucide="play-circle" class="w-4 h-4"></i>
+                                <span>Try This Scenario</span>
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            Every pattern on Frets 0-11 repeats identically on Frets 12-23, one octave higher! The 24th fret marks the second complete octave loop. See how the C Major chord formula aligns identically across both octaves.
+                        </p>
+                    </div>
+
+                    <!-- SCENARIO 4 -->
+                    <div class="p-5 rounded-xl bg-wood-900/80 border border-amber-900/40 space-y-3">
+                        <div class="flex justify-between items-start gap-2">
+                            <div>
+                                <span class="text-[10px] font-mono uppercase bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded font-bold">Scenario 4</span>
+                                <h4 class="text-base font-bold text-blue-200 mt-1">Writing Songs with Emotional Textures</h4>
+                            </div>
+                            <button onclick="runScenario('songwriting')" class="shrink-0 bg-blue-500 hover:bg-blue-400 text-wood-950 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center space-x-1.5 transition">
+                                <i data-lucide="play-circle" class="w-4 h-4"></i>
+                                <span>Try This Scenario</span>
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            Move beyond basic major and minor shapes. Combine floating <code>Csus2</code> chords, nostalgic <code>Cmaj7</code> textures, and tension-filled <code>Gsus4</code> chords in the songwriting timeline.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- TAB 2: TOOL GUIDE -->
+                <div id="guide-sec-tools" class="guide-sec space-y-4 hidden">
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-xl bg-wood-900 border border-amber-900/30">
+                            <h5 class="text-sm font-bold text-amber-300 flex items-center space-x-2">
+                                <i data-lucide="layers" class="w-4 h-4"></i>
+                                <span>1. Interactive 24-Fret Chromatic Map</span>
+                            </h5>
+                            <p class="text-xs text-gray-300 mt-1">Use the <strong>Root Key selector</strong> to set your key, then apply <strong>Formula Filters</strong> (Major, Minor, 7th, Pentatonic). Switch marker display to <em>Note Names</em>, <em>Intervals</em>, or <em>Semitones</em> to master neck geometry.</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-wood-900 border border-amber-900/30">
+                            <h5 class="text-sm font-bold text-amber-300 flex items-center space-x-2">
+                                <i data-lucide="binary" class="w-4 h-4"></i>
+                                <span>2. Chord Symbol Decoder</span>
+                            </h5>
+                            <p class="text-xs text-gray-300 mt-1">Converts intimidating symbols like <code>Cadd9</code>, <code>Dsus4</code>, or <code>Am7</code> into three simple parts: Root, Formula, and physical finger adjustment.</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-wood-900 border border-amber-900/30">
+                            <h5 class="text-sm font-bold text-amber-300 flex items-center space-x-2">
+                                <i data-lucide="git-commit" class="w-4 h-4"></i>
+                                <span>3. 1-Note Shape Mutation Engine</span>
+                            </h5>
+                            <p class="text-xs text-gray-300 mt-1">Start with open chord shapes you already know and click mutation buttons to change a single note on purpose. Watch the SVG fretboard update and hear the chord.</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-wood-900 border border-amber-900/30">
+                            <h5 class="text-sm font-bold text-amber-300 flex items-center space-x-2">
+                                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                                <span>4. Songwriting Palette & Quiz Drills</span>
+                            </h5>
+                            <p class="text-xs text-gray-300 mt-1">Build multi-chord progression timelines categorized by mood, then test your knowledge in the 24-fret speed drill challenge.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: THEORY CHEAT SHEET -->
+                <div id="guide-sec-theory" class="guide-sec space-y-4 hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 rounded-xl bg-wood-900 border border-amber-900/30">
+                            <span class="font-bold text-amber-300 block mb-1">Major Triad (1 - 3 - 5)</span>
+                            <p class="text-gray-400">Bright, grounded, stable. Formed by Root + 4 semitones (Major 3rd) + 3 semitones (Perfect 5th).</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-wood-900 border border-amber-900/30">
+                            <span class="font-bold text-amber-300 block mb-1">Minor Triad (1 - ♭3 - 5)</span>
+                            <p class="text-gray-400">Melancholic, sad, introspective. Lowering the 3rd by 1 semitone changes major to minor.</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-wood-900 border border-amber-900/30">
+                            <span class="font-bold text-amber-300 block mb-1">Suspended 4th (1 - 4 - 5)</span>
+                            <p class="text-gray-400">Replaces the 3rd with the 4th interval. Creates tension longing to resolve back down to the 3rd.</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-wood-900 border border-amber-900/30">
+                            <span class="font-bold text-amber-300 block mb-1">Add 9 Chord (1 - 3 - 5 - 9)</span>
+                            <p class="text-gray-400">Adds the 2nd octave note (9th) to a basic major triad without adding a 7th interval.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 border-t border-amber-900/50 bg-wood-900/90 flex justify-between items-center shrink-0">
+                <span class="text-xs text-amber-500 font-mono">Tip: You can re-open this guide anytime from the header button.</span>
+                <button onclick="closeTutorialModal()" class="bg-amber-500 hover:bg-amber-400 text-wood-950 font-bold px-5 py-2 rounded-xl text-xs transition">
+                    Got It, Let's Play!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CORE LOGIC & AUDIO ENGINE -->
+    <script>
+        // --- TUTORIAL MODAL & SCENARIO LOGIC ---
+        function openTutorialModal() {
+            document.getElementById('tutorial-modal').classList.remove('hidden');
+        }
+
+        function closeTutorialModal() {
+            document.getElementById('tutorial-modal').classList.add('hidden');
+        }
+
+        function switchGuideTab(tabKey) {
+            document.querySelectorAll('.guide-tab').forEach(btn => {
+                btn.classList.remove('text-amber-400', 'border-b-2', 'border-amber-400', 'active');
+                btn.classList.add('text-gray-400');
+            });
+            document.querySelectorAll('.guide-sec').forEach(sec => sec.classList.add('hidden'));
+
+            document.getElementById(`guide-tab-${tabKey}`).classList.remove('text-gray-400');
+            document.getElementById(`guide-tab-${tabKey}`).classList.add('text-amber-400', 'border-b-2', 'border-amber-400', 'active');
+            document.getElementById(`guide-sec-${tabKey}`).classList.remove('hidden');
+        }
+
+        function runScenario(type) {
+            closeTutorialModal();
+
+            if (type === 'wonderwall') {
+                switchTab('mutation');
+                currentBaseShape = 'C';
+                currentFretState = [...MUTATION_SHAPES['C'].frets];
+                initMutationSection();
+                setTimeout(() => {
+                    // Trigger Cadd9 mutation
+                    const baseData = MUTATION_SHAPES['C'];
+                    const mut = baseData.mutations[2]; // Add9
+                    currentFretState[mut.fretChange[0]] = mut.fretChange[1];
+                    renderMutationFretboard(mut.resultTitle, "1-Note Mutated Shape (Wonderwall / Acoustic Style)");
+                    document.getElementById('mutation-explanation-box').innerText = mut.explanation;
+                    playMutationChord();
+                }, 300);
+            } else if (type === 'voice-leading') {
+                switchTab('voice-leading');
+                document.getElementById('vl-progression-select').value = 'pop-c';
+                renderVoiceLeading();
+                setTimeout(() => {
+                    playVoiceLeadingSequence();
+                }, 300);
+            } else if (type === 'fret24-loop') {
+                switchTab('formulas');
+                selectedFretboardRoot = 'C';
+                document.getElementById('fretboard-formula-select').value = 'major';
+                init24Fretboard();
+                setTimeout(() => {
+                    playFretboardChord();
+                }, 300);
+            } else if (type === 'songwriting') {
+                switchTab('mood-matrix');
+                clearCustomProgression();
+                addChordToProgression('Csus2', 'Sus2');
+                addChordToProgression('Cmaj7', 'Maj7');
+                addChordToProgression('Am', 'Minor');
+                addChordToProgression('Gsus4', 'Sus4');
+                setTimeout(() => {
+                    playCustomProgression();
+                }, 400);
+            }
+        }
+
+        // --- WEB AUDIO API SYNTHESIZER ---
+        class WebAudioSynth {
+            constructor() {
+                this.ctx = null;
+                this.isAudioEnabled = true;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    this.ctx = new AudioContext();
+                }
+                if (this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            }
+
+            // Pitch calculation (A4 = 440 Hz)
+            getNoteFreq(noteName) {
+                const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+                let name = noteName.replace(/[0-9]/g, '');
+                let octave = parseInt(noteName.replace(/[^0-9]/g, '')) || 3;
+                
+                let noteIndex = notes.indexOf(name);
+                if (noteIndex === -1) noteIndex = 0;
+                
+                let semitonesFromA4 = noteIndex - 9 + (octave - 4) * 12;
+                return 440 * Math.pow(2, semitonesFromA4 / 12);
+            }
+
+            playTone(freq, startTime, duration = 1.6) {
+                if (!this.isAudioEnabled) return;
+                this.init();
+
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, startTime);
+
+                gain.gain.setValueAtTime(0, startTime);
+                gain.gain.linearRampToValueAtTime(0.3, startTime + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start(startTime);
+                osc.stop(startTime + duration);
+            }
+
+            playChord(frequencies, arpeggiate = true) {
+                if (!this.isAudioEnabled) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                
+                frequencies.forEach((freq, idx) => {
+                    const delay = arpeggiate ? idx * 0.045 : 0;
+                    this.playTone(freq, now + delay, 2.2);
+                });
+            }
+        }
+
+        const synth = new WebAudioSynth();
+
+        document.getElementById('audio-toggle-btn').addEventListener('click', () => {
+            synth.isAudioEnabled = !synth.isAudioEnabled;
+            const icon = document.getElementById('audio-icon');
+            const text = document.getElementById('audio-status-text');
+            if (synth.isAudioEnabled) {
+                icon.setAttribute('data-lucide', 'volume-2');
+                text.innerText = "Audio Enabled";
+            } else {
+                icon.setAttribute('data-lucide', 'volume-x');
+                text.innerText = "Audio Muted";
+            }
+            lucide.createIcons();
+        });
+
+        // --- THEORY CONSTANTS ---
+        const CHROMATIC = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+        // Standard 6-String Guitar Tuning (Low to High: E2, A2, D3, G3, B3, E4)
+        const TUNING_STANDARD = [
+            { name: 'E', octave: 4 }, // String 1 (High E)
+            { name: 'B', octave: 3 }, // String 2 (B)
+            { name: 'G', octave: 3 }, // String 3 (G)
+            { name: 'D', octave: 3 }, // String 4 (D)
+            { name: 'A', octave: 2 }, // String 5 (A)
+            { name: 'E', octave: 2 }  // String 6 (Low E)
+        ];
+
+        const INTERVAL_DATA = [
+            { semitones: 0,  label: 'Root (R)',     symbol: 'R',     bg: 'bg-red-500',    border: 'border-red-400',    text: 'text-red-100' },
+            { semitones: 1,  label: 'Minor 2nd',    symbol: '♭2',    bg: 'bg-orange-600', border: 'border-orange-400', text: 'text-orange-100' },
+            { semitones: 2,  label: 'Major 2nd',    symbol: '2/9',   bg: 'bg-amber-500',  border: 'border-amber-400',  text: 'text-amber-950' },
+            { semitones: 3,  label: 'Minor 3rd',    symbol: '♭3',    bg: 'bg-purple-600', border: 'border-purple-400', text: 'text-purple-100' },
+            { semitones: 4,  label: 'Major 3rd',    symbol: '3',     bg: 'bg-yellow-500', border: 'border-yellow-300', text: 'text-yellow-950' },
+            { semitones: 5,  label: 'Perfect 4th',  symbol: '4',     bg: 'bg-emerald-500',border: 'border-emerald-400',text: 'text-emerald-950' },
+            { semitones: 6,  label: 'Tritone/♭5',  symbol: '♭5',    bg: 'bg-pink-600',   border: 'border-pink-400',   text: 'text-pink-100' },
+            { semitones: 7,  label: 'Perfect 5th',  symbol: '5',     bg: 'bg-blue-600',    border: 'border-blue-400',   text: 'text-blue-100' },
+            { semitones: 8,  label: 'Minor 6th',    symbol: '♭6',    bg: 'bg-indigo-600', border: 'border-indigo-400', text: 'text-indigo-100' },
+            { semitones: 9,  label: 'Major 6th',    symbol: '6',     bg: 'bg-cyan-500',   border: 'border-cyan-400',   text: 'text-cyan-950' },
+            { semitones: 10, label: 'Minor 7th',    symbol: '♭7',    bg: 'bg-rose-500',   border: 'border-rose-300',   text: 'text-rose-950' },
+            { semitones: 11, label: 'Major 7th',    symbol: '7',     bg: 'bg-teal-400',   border: 'border-teal-200',   text: 'text-teal-950' }
+        ];
+
+        const FORMULA_PRESETS = {
+            'all': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+            'major': [0, 4, 7],
+            'minor': [0, 3, 7],
+            'dom7': [0, 4, 7, 10],
+            'maj7': [0, 4, 7, 11],
+            'm7': [0, 3, 7, 10],
+            'sus2': [0, 2, 7],
+            'sus4': [0, 5, 7],
+            'add9': [0, 4, 7, 2],
+            'pentatonic-maj': [0, 2, 4, 7, 9],
+            'pentatonic-min': [0, 3, 5, 7, 10]
+        };
+
+        // --- FRETBOARD STATE ---
+        let selectedFretboardRoot = 'C';
+        let displayMode = 'notes'; // 'notes', 'intervals', 'semitones'
+        let activeStringSolo = 'all'; // 'all' or index 0..5
+
+        // --- TAB SWITCHING ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('text-amber-400', 'border-b-2', 'border-amber-400');
+                el.classList.add('text-gray-400');
+            });
+
+            document.getElementById(`section-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            activeBtn.classList.remove('text-gray-400');
+            activeBtn.classList.add('text-amber-400', 'border-b-2', 'border-amber-400');
+        }
+
+        // --- 24-FRETBOARD ENGINE RENDERER ---
+        function init24Fretboard() {
+            // Render Root Buttons
+            const rootContainer = document.getElementById('fretboard-root-buttons');
+            rootContainer.innerHTML = '';
+            CHROMATIC.forEach(note => {
+                const btn = document.createElement('button');
+                btn.className = `px-2 py-0.5 text-xs font-mono font-bold rounded transition ${selectedFretboardRoot === note ? 'bg-amber-500 text-wood-950' : 'bg-wood-900 text-gray-300 hover:bg-amber-900/40'}`;
+                btn.innerText = note;
+                btn.onclick = () => {
+                    selectedFretboardRoot = note;
+                    init24Fretboard();
+                    updateFretboard();
+                };
+                rootContainer.appendChild(btn);
+            });
+
+            // Render Legend
+            const legendContainer = document.getElementById('interval-legend-container');
+            legendContainer.innerHTML = '';
+            INTERVAL_DATA.forEach(inv => {
+                const item = document.createElement('div');
+                item.className = `flex items-center space-x-2 p-1.5 rounded bg-wood-900/80 border border-amber-900/20`;
+                item.innerHTML = `
+                    <span class="w-4 h-4 rounded-full ${inv.bg} flex items-center justify-center text-[9px] font-bold ${inv.text}">${inv.symbol}</span>
+                    <span class="text-gray-300 truncate">${inv.label}</span>
+                `;
+                legendContainer.appendChild(item);
+            });
+
+            updateFretboard();
+        }
+
+        function setDisplayMode(mode) {
+            displayMode = mode;
+            ['notes', 'intervals', 'semitones'].forEach(m => {
+                const btn = document.getElementById(`disp-mode-${m}`);
+                if (m === mode) {
+                    btn.className = "px-2.5 py-1 rounded-md bg-amber-500 text-wood-950 font-bold";
+                } else {
+                    btn.className = "px-2.5 py-1 rounded-md text-gray-400 hover:text-amber-200";
+                }
+            });
+            updateFretboard();
+        }
+
+        function toggleStringSolo(stringIdx) {
+            activeStringSolo = stringIdx;
+            const buttons = ['all', 0, 1, 2, 3, 4, 5];
+            buttons.forEach(b => {
+                const btn = document.getElementById(`str-solo-${b}`);
+                if (b === stringIdx) {
+                    btn.className = "px-2 py-0.5 rounded bg-amber-500 text-wood-950 font-bold";
+                } else {
+                    btn.className = "px-2 py-0.5 rounded bg-wood-900 text-gray-300 border border-amber-900/40";
+                }
+            });
+            updateFretboard();
+        }
+
+        function updateFretboard() {
+            const container = document.getElementById('fretboard-main');
+            const selectedFormulaKey = document.getElementById('fretboard-formula-select').value;
+            const allowedSemitones = FORMULA_PRESETS[selectedFormulaKey];
+
+            const rootIdx = CHROMATIC.indexOf(selectedFretboardRoot);
+            
+            // Marker Frets
+            const singleDotFrets = [3, 5, 7, 9, 15, 17, 19, 21];
+            const doubleDotFrets = [12, 24];
+
+            let html = `
+                <!-- Fret Numbers Header Row -->
+                <div class="grid grid-cols-[50px_repeat(25,minmax(55px,1fr))] text-center text-xs font-mono font-bold text-amber-400 mb-2 border-b border-amber-900/40 pb-1">
+                    <div>Str</div>
+                    <div>Nut</div>
+            `;
+            for (let f = 1; f <= 24; f++) {
+                const isDouble = doubleDotFrets.includes(f);
+                const isSingle = singleDotFrets.includes(f);
+                html += `
+                    <div class="relative flex flex-col items-center justify-center">
+                        <span>${f}</span>
+                        ${isSingle ? '<span class="w-1.5 h-1.5 rounded-full bg-amber-400/80 mt-1"></span>' : ''}
+                        ${isDouble ? '<div class="flex space-x-0.5 mt-1"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span></div>' : ''}
+                    </div>
+                `;
+            }
+            html += `</div>`;
+
+            // Strings 1 to 6
+            TUNING_STANDARD.forEach((str, strIdx) => {
+                const isSoloed = activeStringSolo === 'all' || activeStringSolo === strIdx;
+                const opacityClass = isSoloed ? 'opacity-100' : 'opacity-20 pointer-events-none';
+
+                html += `
+                    <div class="grid grid-cols-[50px_repeat(25,minmax(55px,1fr))] items-center my-2 relative ${opacityClass}">
+                        <!-- String Label -->
+                        <div class="font-mono text-xs font-bold text-amber-200 text-center">${str.name}</div>
+                `;
+
+                // Calculate notes across Nut (0) to 24 Frets
+                const openNoteIdx = CHROMATIC.indexOf(str.name);
+                
+                for (let fret = 0; fret <= 24; fret++) {
+                    const currentNoteIdx = (openNoteIdx + fret) % 12;
+                    const currentNote = CHROMATIC[currentNoteIdx];
+                    
+                    // Interval relative to selected root
+                    const semitonesFromRoot = (currentNoteIdx - rootIdx + 12) % 12;
+                    const intervalObj = INTERVAL_DATA[semitonesFromRoot];
+                    
+                    const isHighlighted = allowedSemitones.includes(semitonesFromRoot);
+
+                    // Pitch calculation
+                    const octaveOffset = Math.floor((openNoteIdx + fret) / 12);
+                    const notePitch = currentNote + (str.octave + octaveOffset);
+                    const freq = synth.getNoteFreq(notePitch).toFixed(1);
+
+                    // Display Label depending on mode
+                    let markerLabel = currentNote;
+                    if (displayMode === 'intervals') markerLabel = intervalObj.symbol;
+                    if (displayMode === 'semitones') markerLabel = `+${semitonesFromRoot}`;
+
+                    const fretBorderClass = fret === 0 ? 'nut-bar border-r-4 border-amber-200' : 'border-r-2 fret-wire';
+
+                    html += `
+                        <div class="h-10 border-amber-900/30 flex items-center justify-center relative ${fretBorderClass}">
+                            <!-- String Line -->
+                            <div class="absolute left-0 right-0 h-[${1 + strIdx * 0.5}px] bg-amber-100/40 z-0"></div>
+                            
+                            ${isHighlighted ? `
+                                <button onclick="onFretClick('${notePitch}', '${currentNote}', '${intervalObj.label}', '${semitonesFromRoot}', '${freq}')"
+                                        onmouseenter="onFretHover('${currentNote}', '${intervalObj.label}', '${semitonesFromRoot}', '${freq}', '${notePitch}')"
+                                        class="note-marker z-10 w-7 h-7 rounded-full ${intervalObj.bg} ${intervalObj.border} border-2 ${intervalObj.text} font-mono font-extrabold text-[11px] shadow-md flex items-center justify-center">
+                                    ${markerLabel}
+                                </button>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+
+                html += `</div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function onFretHover(note, interval, semitones, freq, pitch) {
+            const box = document.getElementById('note-detail-box');
+            box.innerHTML = `
+                <div class="flex items-center space-x-4 font-mono">
+                    <span class="text-base font-bold text-amber-300">${pitch}</span>
+                    <span>Interval: <strong class="text-amber-400">${interval}</strong></span>
+                    <span>Distance: <strong class="text-amber-400">+${semitones} semitones</strong></span>
+                    <span>Freq: <strong class="text-amber-400">${freq} Hz</strong></span>
+                </div>
+            `;
+        }
+
+        function onFretClick(pitch, note, interval, semitones, freq) {
+            synth.playTone(synth.getNoteFreq(pitch), synth.ctx ? synth.ctx.currentTime : 0, 1.5);
+            onFretHover(note, interval, semitones, freq, pitch);
+        }
+
+        function playFretboardChord() {
+            const selectedFormulaKey = document.getElementById('fretboard-formula-select').value;
+            const allowedSemitones = FORMULA_PRESETS[selectedFormulaKey];
+            const rootIdx = CHROMATIC.indexOf(selectedFretboardRoot);
+
+            const freqs = [];
+            // Pick notes on strings for highlighted formula
+            TUNING_STANDARD.forEach((str, strIdx) => {
+                const openNoteIdx = CHROMATIC.indexOf(str.name);
+                for (let fret = 0; fret <= 12; fret++) {
+                    const currentNoteIdx = (openNoteIdx + fret) % 12;
+                    const semitonesFromRoot = (currentNoteIdx - rootIdx + 12) % 12;
+                    if (allowedSemitones.includes(semitonesFromRoot)) {
+                        const octaveOffset = Math.floor((openNoteIdx + fret) / 12);
+                        const notePitch = CHROMATIC[currentNoteIdx] + (str.octave + octaveOffset);
+                        freqs.push(synth.getNoteFreq(notePitch));
+                        break; // Grab first matching note per string for strum
+                    }
+                }
+            });
+            synth.playChord(freqs, true);
+        }
+
+        // --- MODULE 2 DECODER LOGIC ---
+        const DECODER_PRESETS = {
+            'Cadd9': {
+                root: 'C',
+                formulaName: 'Major + Added 9th (1 - 3 - 5 - 9)',
+                decision: 'Start with Open C Major. Place your pinky finger on the 3rd fret of the B string (D note) to add the 9th interval.',
+                notes: ['C', 'E', 'G', 'D']
+            },
+            'Dsus4': {
+                root: 'D',
+                formulaName: 'Suspended 4th (1 - 4 - 5)',
+                decision: 'Start with Open D Major. Place your pinky finger on the 3rd fret of the High E string (G note) to replace the 3rd (F#) with the 4th (G).',
+                notes: ['D', 'A', 'G']
+            },
+            'Am7': {
+                root: 'A',
+                formulaName: 'Minor 7th (1 - ♭3 - 5 - ♭7)',
+                decision: 'Start with Open A Minor. Lift your ring finger off the G string so it plays open (G note), introducing the Flat 7th.',
+                notes: ['A', 'C', 'E', 'G']
+            },
+            'Fmaj7': {
+                root: 'F',
+                formulaName: 'Major 7th (1 - 3 - 5 - 7)',
+                decision: 'Start with F Major shape. Play the High E string completely OPEN (E note) instead of fretting it on the 1st fret.',
+                notes: ['F', 'A', 'C', 'E']
+            }
+        };
+
+        function initDecoderSection() {
+            const presetBtns = document.getElementById('decoder-preset-btns');
+            presetBtns.innerHTML = '';
+
+            Object.keys(DECODER_PRESETS).forEach(symbol => {
+                const btn = document.createElement('button');
+                btn.className = 'px-3 py-1.5 rounded-xl bg-wood-900 border border-amber-700/40 hover:border-amber-400 text-amber-200 text-sm font-mono font-bold transition';
+                btn.innerText = symbol;
+                btn.onclick = () => renderDecoderResult(symbol);
+                presetBtns.appendChild(btn);
+            });
+
+            renderDecoderResult('Cadd9');
+        }
+
+        function renderDecoderResult(symbol) {
+            const data = DECODER_PRESETS[symbol];
+            const container = document.getElementById('decoder-result');
+            
+            container.innerHTML = `
+                <div class="flex flex-wrap justify-between items-center gap-4">
+                    <div>
+                        <span class="text-xs text-amber-500 font-semibold uppercase tracking-wider">Decoded Symbol</span>
+                        <h3 class="text-3xl font-mono font-extrabold text-amber-300">${symbol}</h3>
+                    </div>
+                    <button onclick="playDecoderChord(['${data.notes.join("','")}'])" class="bg-amber-500 hover:bg-amber-400 text-wood-950 font-bold px-4 py-2 rounded-xl text-sm flex items-center space-x-2 transition">
+                        <i data-lucide="volume-2" class="w-4 h-4"></i>
+                        <span>Listen to Symbol</span>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 rounded-xl bg-wood-900/60 border border-amber-900/30">
+                        <span class="text-xs text-gray-400 uppercase tracking-wider block mb-1 font-semibold">1. Root Note</span>
+                        <p class="text-lg font-mono font-bold text-amber-200">${data.root}</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-wood-900/60 border border-amber-900/30">
+                        <span class="text-xs text-gray-400 uppercase tracking-wider block mb-1 font-semibold">2. Applied Formula</span>
+                        <p class="text-sm font-semibold text-amber-100">${data.formulaName}</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-wood-900/60 border border-amber-900/30">
+                        <span class="text-xs text-gray-400 uppercase tracking-wider block mb-1 font-semibold">3. Notes Included</span>
+                        <p class="text-sm font-mono font-bold text-amber-300">${data.notes.join(' - ')}</p>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-xl bg-amber-950/40 border border-amber-500/30 flex items-start space-x-3">
+                    <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 mt-0.5">
+                        <i data-lucide="hand" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1">Small Finger Decision</h4>
+                        <p class="text-sm text-gray-200 leading-relaxed">${data.decision}</p>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function playDecoderChord(notes) {
+            const freqs = notes.map((n, i) => synth.getNoteFreq(n + (i > 1 ? '4' : '3')));
+            synth.playChord(freqs, true);
+        }
+
+        // --- MODULE 3 MUTATION LOGIC ---
+        const MUTATION_SHAPES = {
+            'C': {
+                baseTitle: 'C Major (Open Shape)',
+                frets: [-1, 3, 2, 0, 1, 0],
+                mutations: [
+                    { name: 'Drop 3rd to ♭3 (C minor)', fretChange: [2, 1], resultTitle: 'Cm (C Minor)', explanation: 'Drop middle finger on D string down 1 fret to E♭ (♭3 interval).' },
+                    { name: 'Lift finger for Sus2 (Csus2)', fretChange: [4, 0], resultTitle: 'Csus2', explanation: 'Lift index finger off B string to let D ring open (2nd interval).' },
+                    { name: 'Add Pinky for Add9 (Cadd9)', fretChange: [4, 3], resultTitle: 'Cadd9', explanation: 'Place pinky on 3rd fret of B string (D note).' }
+                ]
+            },
+            'E': {
+                baseTitle: 'E Major (Open Shape)',
+                frets: [0, 2, 2, 1, 0, 0],
+                mutations: [
+                    { name: 'Lift index for Minor (E minor)', fretChange: [3, 0], resultTitle: 'Em (E Minor)', explanation: 'Lift index finger off G string so it plays open G (♭3 interval).' },
+                    { name: 'Lift ring for Dom7 (E7)', fretChange: [2, 0], resultTitle: 'E7 (Dominant 7th)', explanation: 'Lift ring finger off D string so it plays open D (♭7 interval).' }
+                ]
+            }
+        };
+
+        let currentBaseShape = 'C';
+        let currentFretState = [...MUTATION_SHAPES['C'].frets];
+
+        function initMutationSection() {
+            const baseContainer = document.getElementById('mutation-base-selector');
+            baseContainer.innerHTML = '';
+
+            Object.keys(MUTATION_SHAPES).forEach(key => {
+                const btn = document.createElement('button');
+                btn.className = `px-3 py-1.5 text-xs font-mono font-bold rounded-xl border transition ${currentBaseShape === key ? 'bg-amber-500 text-wood-950 border-amber-400' : 'bg-wood-900 text-amber-200 border-amber-900/40 hover:border-amber-600'}`;
+                btn.innerText = `Open ${key} Shape`;
+                btn.onclick = () => {
+                    currentBaseShape = key;
+                    currentFretState = [...MUTATION_SHAPES[key].frets];
+                    initMutationSection();
+                    renderMutationFretboard(MUTATION_SHAPES[key].baseTitle, "Standard Open Shape");
+                    renderMutationActions();
+                };
+                baseContainer.appendChild(btn);
+            });
+
+            renderMutationFretboard(MUTATION_SHAPES['C'].baseTitle, "Standard Open Shape");
+            renderMutationActions();
+        }
+
+        function renderMutationFretboard(title, subtext) {
+            document.getElementById('mutation-chord-title').innerText = title;
+            document.getElementById('mutation-chord-subtext').innerText = subtext;
+
+            const container = document.getElementById('fretboard-canvas-container');
+            const strings = ['E', 'A', 'D', 'G', 'B', 'e'];
+            
+            let svgHtml = `
+                <svg viewBox="0 0 300 180" class="w-full h-auto text-amber-500">
+                    <rect x="40" y="20" width="8" height="140" fill="#d97706" rx="2" />
+                    <line x1="100" y1="20" x2="100" y2="160" stroke="#4a3222" stroke-width="3" />
+                    <line x1="160" y1="20" x2="160" y2="160" stroke="#4a3222" stroke-width="3" />
+                    <line x1="220" y1="20" x2="220" y2="160" stroke="#4a3222" stroke-width="3" />
+                    <line x1="280" y1="20" x2="280" y2="160" stroke="#4a3222" stroke-width="3" />
+            `;
+
+            currentFretState.forEach((fret, strIdx) => {
+                const y = 30 + strIdx * 24;
+                svgHtml += `<line x1="35" y1="${y}" x2="290" y2="${y}" stroke="#a8a29e" stroke-width="${1 + strIdx*0.5}" />`;
+                svgHtml += `<text x="20" y="${y + 4}" fill="#a8a29e" font-size="12" font-family="monospace" text-anchor="middle">${strings[strIdx]}</text>`;
+
+                if (fret === -1) {
+                    svgHtml += `<text x="44" y="${y + 4}" fill="#ef4444" font-size="14" font-weight="bold" text-anchor="middle">X</text>`;
+                } else if (fret === 0) {
+                    svgHtml += `<circle cx="44" cy="${y}" r="6" fill="none" stroke="#2dd4bf" stroke-width="2" />`;
+                } else {
+                    const cx = 40 + fret * 60 - 30;
+                    svgHtml += `
+                        <circle cx="${cx}" cy="${y}" r="9" fill="#f59e0b" stroke="#78350f" stroke-width="2" />
+                        <text x="${cx}" y="${y + 4}" fill="#120805" font-size="10" font-weight="bold" text-anchor="middle">${fret}</text>
+                    `;
+                }
+            });
+
+            svgHtml += `</svg>`;
+            container.innerHTML = svgHtml;
+        }
+
+        function renderMutationActions() {
+            const list = document.getElementById('mutation-actions-list');
+            list.innerHTML = '';
+            const baseData = MUTATION_SHAPES[currentBaseShape];
+
+            baseData.mutations.forEach(mut => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3 rounded-xl bg-wood-950 hover:bg-amber-900/20 border border-amber-900/30 text-xs font-medium text-gray-200 hover:text-amber-300 transition flex justify-between items-center";
+                btn.innerHTML = `<span>${mut.name}</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-amber-500"></i>`;
+                btn.onclick = () => {
+                    currentFretState = [...baseData.frets];
+                    currentFretState[mut.fretChange[0]] = mut.fretChange[1];
+                    renderMutationFretboard(mut.resultTitle, "1-Note Mutated Shape");
+                    document.getElementById('mutation-explanation-box').innerText = mut.explanation;
+                    playMutationChord();
+                };
+                list.appendChild(btn);
+            });
+            lucide.createIcons();
+        }
+
+        function playMutationChord() {
+            const basePitches = [
+                ['E2', 'F2', 'F#2', 'G2'],
+                ['A2', 'A#2', 'B2', 'C3'],
+                ['D3', 'D#3', 'E3', 'F3'],
+                ['G3', 'G#3', 'A3', 'A#3'],
+                ['B3', 'C4', 'C#4', 'D4'],
+                ['E4', 'F4', 'F#4', 'G4']
+            ];
+
+            const freqs = [];
+            currentFretState.forEach((fret, strIdx) => {
+                if (fret >= 0) {
+                    const pitch = basePitches[strIdx][fret] || 'C3';
+                    freqs.push(synth.getNoteFreq(pitch));
+                }
+            });
+            synth.playChord(freqs, true);
+        }
+
+        // --- MODULE 4 HIGH REGISTER VOICE LEADING LOGIC ---
+        const HIGH_REGISTER_DATA = {
+            'pop-c': [
+                { chord: 'C Major', notes: ['C4', 'E4', 'G4'], position: 'Frets 12-17 (High Triad Inversion)' },
+                { chord: 'A Minor', notes: ['C4', 'E4', 'A4'], position: 'Frets 12-17 (Keep C & E, move G->A)' },
+                { chord: 'F Major', notes: ['C4', 'F4', 'A4'], position: 'Frets 13-17 (Keep C & A, move E->F)' },
+                { chord: 'G Major', notes: ['B3', 'D4', 'G4'], position: 'Frets 12-15 (Voice led G triad)' }
+            ],
+            'rock-d': [
+                { chord: 'D Major', notes: ['D4', 'F#4', 'A4'], position: 'Frets 14-17 (High D shape)' },
+                { chord: 'B Minor', notes: ['D4', 'F#4', 'B4'], position: 'Frets 14-19 (Shift A->B)' },
+                { chord: 'G Major', notes: ['D4', 'G4', 'B4'], position: 'Frets 15-19 (Shift F#->G)' },
+                { chord: 'A Major', notes: ['C#4', 'E4', 'A4'], position: 'Frets 14-17 (Smooth A triad)' }
+            ],
+            'jazz-ii-v-i': [
+                { chord: 'Dm7', notes: ['F4', 'A4', 'C5', 'E5'], position: 'Frets 15-17 (High Register Guide Tones)' },
+                { chord: 'G7', notes: ['F4', 'B4', 'D5', 'F5'], position: 'Frets 15-18 (Voice leading C->B)' },
+                { chord: 'Cmaj7', notes: ['E4', 'B4', 'C5', 'E5'], position: 'Frets 14-17 (Voice leading F->E)' }
+            ]
+        };
+
+        function renderVoiceLeading() {
+            const key = document.getElementById('vl-progression-select').value;
+            const sequence = HIGH_REGISTER_DATA[key];
+            const container = document.getElementById('vl-display');
+            container.innerHTML = '';
+
+            sequence.forEach((item, idx) => {
+                const card = document.createElement('div');
+                card.className = "p-4 rounded-2xl bg-wood-950/90 border border-amber-900/40 space-y-3 relative";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-mono text-amber-500">Step ${idx + 1}</span>
+                        <span class="text-xs bg-amber-500/10 text-amber-300 px-2 py-0.5 rounded font-mono">Frets 12-24</span>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold font-mono text-amber-200">${item.chord}</h4>
+                        <p class="text-xs text-gray-400 mt-1">${item.position}</p>
+                    </div>
+                    <div class="p-2.5 rounded-lg bg-wood-900 text-xs font-mono text-amber-300 font-bold text-center">
+                        ${item.notes.join(' - ')}
+                    </div>
+                    <button onclick="playVoiceLeadingChord(['${item.notes.join("','")}'])" class="w-full py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 rounded-xl text-xs font-bold border border-amber-500/30 flex items-center justify-center space-x-1.5 transition">
+                        <i data-lucide="volume-1" class="w-4 h-4"></i>
+                        <span>Hear High Inversion</span>
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function playVoiceLeadingChord(notes) {
+            const freqs = notes.map(n => synth.getNoteFreq(n));
+            synth.playChord(freqs, true);
+        }
+
+        function playVoiceLeadingSequence() {
+            const key = document.getElementById('vl-progression-select').value;
+            const sequence = HIGH_REGISTER_DATA[key];
+            sequence.forEach((item, idx) => {
+                setTimeout(() => {
+                    playVoiceLeadingChord(item.notes);
+                }, idx * 1200);
+            });
+        }
+
+        // --- MODULE 5 SONGWRITING LOGIC ---
+        let customProgression = [];
+
+        function addChordToProgression(symbol, mood) {
+            if (customProgression.length >= 6) return;
+            customProgression.push({ symbol, mood });
+            renderCustomProgression();
+            playSingleMoodChord(symbol);
+        }
+
+        function removeChordFromProgression(idx) {
+            customProgression.splice(idx, 1);
+            renderCustomProgression();
+        }
+
+        function clearCustomProgression() {
+            customProgression = [];
+            renderCustomProgression();
+        }
+
+        function renderCustomProgression() {
+            const container = document.getElementById('custom-progression-slots');
+            container.innerHTML = '';
+
+            if (customProgression.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center text-xs text-gray-500 py-4">Click any chord from the emotional matrix above to build your progression...</div>`;
+                return;
+            }
+
+            customProgression.forEach((item, idx) => {
+                const slot = document.createElement('div');
+                slot.className = "p-3 rounded-xl bg-wood-900 border border-amber-600/40 relative group flex flex-col justify-between h-20";
+                slot.innerHTML = `
+                    <button onclick="removeChordFromProgression(${idx})" class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-rose-600 text-white text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow">×</button>
+                    <span class="text-xs font-mono text-amber-500">0${idx + 1}</span>
+                    <span class="text-base font-bold font-mono text-amber-200">${item.symbol}</span>
+                    <span class="text-[10px] text-gray-400 font-medium truncate">${item.mood}</span>
+                `;
+                container.appendChild(slot);
+            });
+        }
+
+        function playSingleMoodChord(symbol) {
+            const chordPitches = {
+                'C': ['C3', 'E3', 'G3'],
+                'Cmaj7': ['C3', 'E3', 'G3', 'B3'],
+                'Csus2': ['C3', 'D3', 'G3'],
+                'Am': ['A2', 'C3', 'E3'],
+                'G7': ['G2', 'B2', 'D3', 'F3'],
+                'Dsus4': ['D3', 'A3', 'G3']
+            };
+            const pitches = chordPitches[symbol] || ['C3', 'E3', 'G3'];
+            const freqs = pitches.map(p => synth.getNoteFreq(p));
+            synth.playChord(freqs, true);
+        }
+
+        function playCustomProgression() {
+            customProgression.forEach((item, idx) => {
+                setTimeout(() => {
+                    playSingleMoodChord(item.symbol);
+                }, idx * 1400);
+            });
+        }
+
+        // --- MODULE 6 24-FRET QUIZ LOGIC ---
+        const QUIZ_QUESTIONS = [
+            {
+                question: "What note is located on the 12th fret of the High E (1st) string?",
+                options: ["E4", "E5", "G4", "A4"],
+                correct: 1,
+                explanation: "The 12th fret reproduces the open string note exactly one octave higher (E4 -> E5)."
+            },
+            {
+                question: "What interval is produced on Fret 7 of the A (5th) string relative to open A?",
+                options: ["Perfect 4th", "Perfect 5th (E)", "Major 3rd", "Minor 7th"],
+                correct: 1,
+                explanation: "7 frets above any root note equals 7 semitones, which is a Perfect 5th (E note)."
+            },
+            {
+                question: "What is the interval formula for a Minor 7th chord?",
+                options: ["1 - 3 - 5 - 7", "1 - ♭3 - 5 - ♭7", "1 - 4 - 5", "1 - ♭3 - ♭5 - ♭7"],
+                correct: 1,
+                explanation: "Minor 7th chords consist of Root (1), Minor 3rd (♭3), Perfect 5th (5), and Minor 7th (♭7)."
+            },
+            {
+                question: "Where are the double position dot markers located on a standard 24-fret guitar neck?",
+                options: ["Frets 5 & 10", "Frets 12 & 24", "Frets 7 & 19", "Frets 3 & 15"],
+                correct: 1,
+                explanation: "Double dots mark the full octave markers at Fret 12 and Fret 24."
+            }
+        ];
+
+        let currentQuizIdx = 0;
+        let quizScore = 0;
+
+        function loadQuizQuestion() {
+            const q = QUIZ_QUESTIONS[currentQuizIdx];
+            document.getElementById('quiz-question-title').innerText = q.question;
+
+            const container = document.getElementById('quiz-options-container');
+            container.innerHTML = '';
+            
+            const feedback = document.getElementById('quiz-feedback');
+            feedback.className = 'hidden p-4 rounded-xl text-sm font-medium transition';
+            document.getElementById('quiz-next-btn').classList.add('hidden');
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "p-4 rounded-xl bg-wood-900 hover:bg-amber-900/30 border border-amber-900/40 text-left text-sm font-medium text-gray-200 transition flex items-center space-x-3";
+                btn.innerHTML = `
+                    <span class="w-6 h-6 rounded-full bg-wood-950 border border-amber-600/40 flex items-center justify-center text-xs font-mono font-bold text-amber-400 shrink-0">${String.fromCharCode(65 + idx)}</span>
+                    <span>${opt}</span>
+                `;
+                btn.onclick = () => checkQuizAnswer(idx, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkQuizAnswer(selectedIdx, btnEl) {
+            const q = QUIZ_QUESTIONS[currentQuizIdx];
+            const feedback = document.getElementById('quiz-feedback');
+            const allBtns = document.getElementById('quiz-options-container').children;
+
+            for (let b of allBtns) b.disabled = true;
+
+            if (selectedIdx === q.correct) {
+                quizScore++;
+                btnEl.classList.add('border-green-500', 'bg-green-950/40');
+                feedback.className = 'p-4 rounded-xl text-sm font-medium bg-green-950/60 border border-green-500/40 text-green-200 block';
+                feedback.innerText = "✨ Correct! " + q.explanation;
+            } else {
+                btnEl.classList.add('border-rose-500', 'bg-rose-950/40');
+                allBtns[q.correct].classList.add('border-green-500', 'bg-green-950/40');
+                feedback.className = 'p-4 rounded-xl text-sm font-medium bg-rose-950/60 border border-rose-500/40 text-rose-200 block';
+                feedback.innerText = "❌ Not quite. " + q.explanation;
+            }
+
+            document.getElementById('quiz-score').innerText = `${quizScore} / ${QUIZ_QUESTIONS.length}`;
+            document.getElementById('quiz-next-btn').classList.remove('hidden');
+        }
+
+        function nextQuizQuestion() {
+            currentQuizIdx = (currentQuizIdx + 1) % QUIZ_QUESTIONS.length;
+            loadQuizQuestion();
+        }
+
+        // --- APP INIT ---
+        window.onload = function() {
+            lucide.createIcons();
+            init24Fretboard();
+            initDecoderSection();
+            initMutationSection();
+            renderVoiceLeading();
+            renderCustomProgression();
+            loadQuizQuestion();
+        };
+    </script>
+</body>
+</html>
